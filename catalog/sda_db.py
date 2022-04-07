@@ -167,7 +167,7 @@ class MongoDBase:
              elements = [self.converter.dict2entry(elem) for elem in dict_list]
              return elements
          
-    def serch(self, query):
+    def search(self, query):
         with self.get_client() as client: 
              docs = self.get_collection(client)
              dict_list = docs.find(query)
