@@ -10,12 +10,13 @@ from flask import Blueprint, current_app, request
 from dataclasses import dataclass, asdict
 import json
 
-from catalog.errors import MissingIdentity, MissingJSON, ItemNotFound
+from catalog.errors import MissingIdentity, MissingJSON, ItemNotFound, MissingInputException
 from catalog.sda_db import MongoDBase, SelfDescribingEntry, SelfDescribingEntryConverter
 
 sda_blueprint = Blueprint('sda_blueprint', __name__, url_prefix='/sda')
 DB_TAG = "DB_TAG"
 ID_TERM = "_id"
+QUERY_FIELD="search"
 
 def _initialize_sda_views(app):
     app.register_blueprint(sda_blueprint)
@@ -58,13 +59,24 @@ def make_entry_response(identity, code, item=None):
     return response.to_json()
     
 def get_request_id(request_type):
-    entry = request.get_json()
-    if entry is None:
-        raise MissingJSON()
+    entry = get_request_json()
     this_id = entry.get(ID_TERM, None)
     if this_id is None:
         raise MissingIdentity(request_type)
     return this_id
+
+def get_request_json():
+    entry = request.get_json()
+    if entry is None:
+        raise MissingJSON()
+    return entry
+
+def get_request_field(entry, field):
+    answer = entry.get(field, None)
+    if answer is None:
+        raise MissingInputException(field, entry)
+    return answer
+    
 
 @sda_blueprint.route("/create", methods=['POST'])
 def create_request():
@@ -117,6 +129,17 @@ def update_request():
 def list_request():
     db = get_db()
     elements = db.get_all()
+    answer = "{"
+    for elem in elements:
+        answer = answer + elem.to_json()
+    answer = answer + "}"
+    return answer
+
+@sda_blueprint.route("/search", methods=['POST'])
+def search_request():
+    db = get_db()
+    query = get_request_field(QUERY_FIELD, get_request_json())
+    elements = db.search(query)
     answer = "{"
     for elem in elements:
         answer = answer + elem.to_json()

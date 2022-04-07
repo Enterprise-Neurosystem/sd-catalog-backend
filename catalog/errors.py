@@ -5,7 +5,7 @@ Created on Sun Feb 27 16:15:10 2022
 
 @author: dineshverma
 """
-from flask import Blueprint, jsonify, render_template, g
+from flask import Blueprint, jsonify, render_template
 import os
 import traceback
 
@@ -40,6 +40,10 @@ class DuplicateEntryException(CatalogException):
     def __init__(self, entry_name, field_name, value_name):
         super().__init__(f"An {entry_name} with {field_name} of {value_name} already exists")
         
+class MissingInputException(CatalogException):
+    def __init__(self, arg_name, entry):
+        super().__init__(f"Field {arg_name } missing in request input {entry}")
+
         
 class WebException(Exception):
     def __init__(self, catalog_exception = None, message=None, code = 500):

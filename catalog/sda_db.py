@@ -159,21 +159,21 @@ class MongoDBase:
             docs = self.get_collection(client)
             docs.delete_many({})
     
-     #This should be replaced with an iterator 
+     #This should be augmented with an iterator 
     def get_all(self):
         with self.get_client() as client: 
              docs = self.get_collection(client)
              dict_list = docs.find()
              elements = [self.converter.dict2entry(elem) for elem in dict_list]
              return elements
-             
-
-        
-        
-    
-    
-            
-            
+         
+    def serch(self, query):
+        with self.get_client() as client: 
+             docs = self.get_collection(client)
+             dict_list = docs.find(query)
+             elements = [self.converter.dict2entry(elem) for elem in dict_list]
+             return elements
+                    
             
         
         
