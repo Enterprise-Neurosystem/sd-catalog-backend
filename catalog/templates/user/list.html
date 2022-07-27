@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}List All Users {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+  <h3>List of Registered Users </h3>   
+ <table border=5>  
+ <thead>  
+ <td>ID</td>  
+ <td>Name</td>  
+ <td>Email</td>
+ <td>Delete</td>   
+ </thead>  
+   {% for u in users %}
+      <tr>  
+        <td>{{u["_id"]}}</td>  
+        <td>{{u["name"]}}</td>  
+        <td>{{u["email"]}}</td> 
+        <td><form action="{{url_for('user_blueprint.del_request')}}" method="get"> <input type="hidden" id="id" name="id" value="{{u['_id']}}"/><input type="submit" value="Remove" />
+</form> </td>
+    </tr>  
+ {% endfor %} 
+ </table>
+ <p> <a href={{url_for('user_blueprint.index_request')}}> Back to User Management </a> </p>
+  {% endblock %}
