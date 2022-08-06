@@ -33,7 +33,7 @@ The user management console is at http://127.0.0.1:5000/user/index
 The application can also be run using containers. You need to have the ability to build images locally and run them as containers. The current version has been tested using Docker desktop.
 
 To bring up the application using docker compose
-```
+```console
 $ cd sd-catalog-backend
 
 $ docker-compose up -d --build
@@ -43,7 +43,7 @@ This will bring up two containers
 + mongodb - managing the self describing catalogue entries
 
 To test the application, use POSTMAN or any other client like httpie. With httpie
-```
+```console
 $ http localhost:5000/user/list
 
 HTTP/1.1 200 OK
