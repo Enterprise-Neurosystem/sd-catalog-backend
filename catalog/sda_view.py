@@ -4,6 +4,7 @@
 Created on Sat Feb 26 18:27:36 2022
 
 @author: dineshverma
+@author: aninditadas
 """
 
 from flask import Blueprint, current_app, request
@@ -119,6 +120,7 @@ def delete_request():
 
 @sda_blueprint.route("/update", methods=['POST'])
 def update_request():
+    print("update")
     db = get_db()
     this_id = get_request_id("update")
     item = db.retrieve(this_id)
@@ -126,8 +128,8 @@ def update_request():
         json_entry = request.get_json()
         if json_entry is None:
             raise MissingJSON()
-        item.update_from_json(json_entry)
-        db.update(this_id, item)
+        json_entry.pop("_id", None)
+        db.update(this_id, json_entry)
         item = db.retrieve(this_id)
     if item is None:
         raise ItemNotFound(this_id)

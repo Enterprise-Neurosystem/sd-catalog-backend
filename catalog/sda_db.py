@@ -4,6 +4,7 @@
 Created on Thu Feb 10 14:50:34 2022
 
 @author: dineshverma
+@author: aninditadas
 """
 
 from dataclasses import dataclass, asdict
@@ -137,7 +138,7 @@ class MongoDBase:
             docs = self.get_collection(client)
             id = self.make_identity(identity)
             update_key = {'_id': id}
-            update_value = {'$set': self.converter.entry2dict(entry)}
+            update_value = {'$set': entry}
             docs.update_one(update_key, update_value)
 
     def delete(self, identity):
