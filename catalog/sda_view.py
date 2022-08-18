@@ -128,7 +128,7 @@ def update_request():
         json_entry = request.get_json()
         if json_entry is None:
             raise MissingJSON()
-        json_entry.pop("_id", None)
+        json_entry.pop(ID_TERM, None)
         db.update(this_id, json_entry)
         item = db.retrieve(this_id)
     if item is None:

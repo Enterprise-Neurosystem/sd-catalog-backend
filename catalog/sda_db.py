@@ -133,11 +133,11 @@ class MongoDBase:
                 return item
             return None
 
-    def update(self, identity, entry: GenericEntry):
+    def update(self, identity, entry: dict):
         with self.get_client() as client:
             docs = self.get_collection(client)
             id = self.make_identity(identity)
-            update_key = {'_id': id}
+            update_key = {ID_FIELD: id}
             update_value = {'$set': entry}
             docs.update_one(update_key, update_value)
 
