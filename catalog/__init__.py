@@ -7,50 +7,48 @@ Created on Tue Feb 22 14:32:51 2022
 """
 
 from flask import Flask
-import os 
+import os
 
-#from views import self_describing_bp
-#from models import SelfDescribingEntryDbase 
+# from views import self_describing_bp
+# from models import SelfDescribingEntryDbase
 from catalog.errors import _initialize_errorhandlers
 from catalog.sda_view import _initialize_sda_views
 from catalog.user_view import _initialize_user_views
 
 
-def create_app(test_config = None):
+def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     if test_config is None:
-        #load the test configuration from instance path 
+        # load the test configuration from instance path
         app.config.from_pyfile('config.py', silent=True)
     else:
         app.config.from_mapping(test_config)
-    
-    #Make Sure that instance_path exists 
+
+    # Make Sure that instance_path exists
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
-    
-    #from catalog.views import sda_blueprint
-    #app.register_blueprint(sda_blueprint)
-    
+
+    # from catalog.views import sda_blueprint
+    # app.register_blueprint(sda_blueprint)
+
     _initialize_errorhandlers(app)
     _initialize_sda_views(app)
     _initialize_user_views(app)
-    
-    #Test configuration 
+
+    # Test configuration
     @app.route('/hello', methods=['GET', 'POST'])
     def hello():
-        answer = "<p> " + app.instance_path +" <p>"
+        answer = "<p> " + app.instance_path + " <p>"
         for this_key in app.config.keys():
-            answer = answer + "<p> " + this_key + ":" + str(app.config[this_key]) +"</p>" 
-        
+            answer = answer + "<p> " + this_key + ":" + str(app.config[this_key]) + "</p>"
+
         return answer
-    
+
     @app.route('/shello', methods=['GET', 'POST'])
     def shello():
         answer = "<p> " + "Simple Hello " + "<p>"
         return answer
 
-    return app 
-
-
+    return app
