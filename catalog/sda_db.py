@@ -145,7 +145,8 @@ class MongoDBase:
         with self.get_client() as client:
             docs = self.get_collection(client)
             id = self.make_identity(identity)
-            docs.delete_one({'_id': id})
+            num_records_deleted = docs.delete_one({'_id': id})
+            return num_records_deleted.deleted_count
 
     def purge(self):
         with self.get_client() as client:
