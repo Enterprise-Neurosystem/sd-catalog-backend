@@ -7,7 +7,7 @@ Created on Sat Feb 26 18:27:36 2022
 @author: aninditadas
 """
 
-from flask import Blueprint, current_app, request
+from flask import Blueprint, current_app, request, jsonify
 from dataclasses import dataclass, asdict
 import json
 
@@ -96,31 +96,29 @@ def create_request():
     return item.to_json()
 
 
-@sda_blueprint.route("/retrieve", methods=['POST'])
-def retrieve_request():
+@sda_blueprint.route("/retrieve/<string:asset_id>", methods=['GET'])
+def retrieve_request(asset_id):
     db = get_db()
-    this_id = get_request_id("retrieve")
-    result = db.retrieve(this_id)
+    result = db.retrieve(asset_id)
     if result is None:
-        raise ItemNotFound(this_id)
-    return result.to_json()
+        raise ItemNotFound(asset_id)
+    return jsonify(result)
 
 
-@sda_blueprint.route("/delete", methods=['POST'])
-def delete_request():
+@sda_blueprint.route("/delete/<string:asset_id>", methods=['GET'])
+def delete_request(asset_id):
     db = get_db()
-    this_id = get_request_id("delete")
-    item = db.retrieve(this_id)
-    if item is None:
-        raise ItemNotFound(this_id)
+    num_records_deleted = db.delete(asset_id)
+    if num_records_deleted == 0:
+        raise ItemNotFound(asset_id)
     else:
-        db.delete(this_id)
-        return ""
+        resp = jsonify('Asset deleted successfully!')
+        resp.status_code = 200
+        return resp
 
 
 @sda_blueprint.route("/update", methods=['POST'])
 def update_request():
-    print("update")
     db = get_db()
     this_id = get_request_id("update")
     item = db.retrieve(this_id)
@@ -136,15 +134,11 @@ def update_request():
     return item.to_json()
 
 
-@sda_blueprint.route("/list", methods=['POST'])
+@sda_blueprint.route("/list", methods=['GET'])
 def list_request():
     db = get_db()
     elements = db.get_all()
-    answer = "{"
-    for elem in elements:
-        answer = answer + elem.to_json()
-    answer = answer + "}"
-    return answer
+    return jsonify(elements)
 
 
 @sda_blueprint.route("/search", methods=['POST'])
