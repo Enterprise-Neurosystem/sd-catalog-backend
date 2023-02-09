@@ -1,4 +1,6 @@
 # sd-catalog-backend
+This code is being developed by the members of Central Intelligence Platfrom Working Group. For more details and to join the group please refer to: https://github.com/Enterprise-Neurosystem/central_intelligence_platform_meetings
+
 A python implementation of catalog of self-describing assets
 
 
