@@ -8,3 +8,4 @@ pymongo==4.2.0
 python-dotenv==0.20.0
 Werkzeug==2.2.1
 zipp==3.8.1
+flask-swagger-ui==4.11.1

@@ -93,7 +93,7 @@ def create_request():
     item = SelfDescribingEntry.from_dict(entry)
     identity = db.create(item)
     item.set_identity(identity)
-    return item.to_json()
+    return jsonify(item)
 
 
 @sda_blueprint.route("/retrieve/<string:asset_id>", methods=['GET'])
@@ -105,7 +105,7 @@ def retrieve_request(asset_id):
     return jsonify(result)
 
 
-@sda_blueprint.route("/delete/<string:asset_id>", methods=['GET'])
+@sda_blueprint.route("/delete/<string:asset_id>", methods=['DELETE'])
 def delete_request(asset_id):
     db = get_db()
     num_records_deleted = db.delete(asset_id)
@@ -117,21 +117,21 @@ def delete_request(asset_id):
         return resp
 
 
-@sda_blueprint.route("/update", methods=['POST'])
-def update_request():
+@sda_blueprint.route("/update/<string:asset_id>", methods=['PUT'])
+def update_request(asset_id):
     db = get_db()
-    this_id = get_request_id("update")
-    item = db.retrieve(this_id)
+    # this_id = get_request_id("update")
+    item = db.retrieve(asset_id)
     if item is not None:
         json_entry = request.get_json()
         if json_entry is None:
             raise MissingJSON()
         json_entry.pop(ID_TERM, None)
-        db.update(this_id, json_entry)
-        item = db.retrieve(this_id)
+        db.update(asset_id, json_entry)
+        item = db.retrieve(asset_id)
     if item is None:
-        raise ItemNotFound(this_id)
-    return item.to_json()
+        raise ItemNotFound(asset_id)
+    return jsonify(item)
 
 
 @sda_blueprint.route("/list", methods=['GET'])

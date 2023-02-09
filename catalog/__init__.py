@@ -7,6 +7,7 @@ Created on Tue Feb 22 14:32:51 2022
 """
 
 from flask import Flask
+from flask_swagger_ui import get_swaggerui_blueprint
 import os
 
 # from views import self_describing_bp
@@ -32,6 +33,21 @@ def create_app(test_config=None):
 
     # from catalog.views import sda_blueprint
     # app.register_blueprint(sda_blueprint)
+
+    # Swagger config
+    SWAGGER_URL = '/apispec'
+    API_URL = '/static/apispec.json'
+    SWAGGER_BLUEPRINT = get_swaggerui_blueprint(
+        SWAGGER_URL,
+        API_URL,
+        config={
+            'app_name': "SDA API",
+            'defaultModelsExpandDepth': -1,
+            'defaultModelRendering': "model",
+            'defaultModelExpandDepth': 2
+        }
+    )
+    app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix=SWAGGER_URL)
 
     _initialize_errorhandlers(app)
     _initialize_sda_views(app)

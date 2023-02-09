@@ -1,0 +1,326 @@
+{
+   "openapi": "3.0.0",
+   "info": {
+      "swagger": "2.0",
+      "description": "SDA APIs",
+      "version": "1.0.0",
+      "title": "SDA Catalog APIs"
+   },
+   "tags": [
+      {
+         "name": "Products API",
+         "description": "Test API"
+      }
+   ],
+   "servers": [
+      {
+         "url": "/"
+      }
+   ],
+   "components": {
+      "schemas": {
+         "asset": {
+            "type": "object",
+            "properties": {
+               "data_type": {
+                  "type": "string",
+                  "required": true
+               },
+               "data_uri": {
+                  "type": "string",
+                  "required": true
+               },
+               "metadata": {
+                  "type": "object",
+                  "properties": {
+                     "name": {
+                        "type": "string",
+                        "required": true
+                     },
+                     "date_created": {
+                        "type": "string",
+                        "required": true
+                     },
+                     "date_updated": {
+                        "type": "string",
+                        "required": true
+                     },
+                     "additionalProperties": {
+                        "type": "string"
+                     }
+                  }
+               },
+               "scope": {
+                  "type": "string"
+               }
+            }
+         },
+         "assets": {
+            "type": "array",
+            "items": {
+               "$ref": "#/components/schemas/asset"
+            }
+         },
+         "id": {
+            "type": "string",
+            "properties": {
+               "name": {
+                  "type": "string"
+               }
+            }
+         }
+      }
+   },
+   "paths": {
+      "/sda/list": {
+         "get": {
+            "tags": [
+               "Get all the Assets published in the catalog"
+            ],
+            "summary": "Get All Assets",
+            "responses": {
+               "200": {
+                  "description": "List of available Assets",
+                  "required": true,
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/assets"
+                        },
+                        "example": [
+                           {
+                              "_id": "63e1f215cacec931cd825e44",
+                              "data_type": "1",
+                              "data_uri": "data_uri",
+                              "metadata": {
+                                 "name": "test",
+                                 "date_created": "2023-02-06T02:39:15",
+                                 "date_updated": "2023-02-06T02:39:15"
+                              },
+                              "scope": "com.ibm.aot.eng"
+                           },
+                           {
+                              "_id": "63e1f215cacec931cd825e55",
+                              "data_type": "2",
+                              "data_uri": "data_uri1",
+                              "metadata": {
+                                 "name": "test1",
+                                 "date_created": "2023-02-06T02:39:16",
+                                 "date_updated": "2023-02-06T02:39:16"
+                              },
+                              "scope": "com.ibm.aot.eng"
+                           }
+                        ]
+                     }
+                  }
+               },
+               "404": {
+                  "description": "NOT FOUND",
+                  "schema": {
+                     "$ref": "#/components/schemas/asset"
+                  }
+               }
+            }
+         }
+      },
+      "/sda/create": {
+         "post": {
+            "tags": [
+               "Publish an asset to the catalog"
+            ],
+            "summary": "Publish an asset",
+            "requestBody": {
+               "description": "Add a new asset to Database",
+               "required": true,
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "$ref": "#/components/schemas/asset"
+                     },
+                     "example": {
+                        "data_type": "1",
+                        "data_uri": "data_uri",
+                        "metadata": {
+                           "name": "test",
+                           "date_created": "2023-02-06T02:39:15",
+                           "date_updated": "2023-02-06T02:39:15"
+                        },
+                        "scope": "com.ibm.aot.eng"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "The asset was published successfully",
+                  "required": true,
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/asset"
+                        },
+                        "example": {
+                           "_id": "63e1f215cacec931cd825e44",
+                           "data_type": "1",
+                           "data_uri": "data_uri",
+                           "metadata": {
+                              "name": "test",
+                              "date_created": "2023-02-06T02:39:15",
+                              "date_updated": "2023-02-06T02:39:15"
+                           },
+                           "scope": "com.ibm.aot.eng"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/sda/retrieve/{id}": {
+         "get": {
+            "tags": [
+               "Retrieve a specific asset from the catalog"
+            ],
+            "summary": "Retrieve a specific asset",
+            "parameters": [
+               {
+                  "name": "id",
+                  "in": "path",
+                  "description": "Asset Identifier",
+                  "required": true,
+                  "type": "string",
+                  "schema": {
+                     "$ref": "#/components/schemas/id"
+                  }
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "The specified Asset was retrieved successfully",
+                  "required": true,
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/asset"
+                        },
+                        "example": {
+                           "_id": "63e1f215cacec931cd825e44",
+                           "data_type": "1",
+                           "data_uri": "data_uri",
+                           "metadata": {
+                              "name": "test",
+                              "date_created": "2023-02-06T02:39:15",
+                              "date_updated": "2023-02-06T02:39:15"
+                           },
+                           "scope": "com.ibm.aot.eng"
+                        }
+                     }
+                  }
+               },
+               "404": {
+                  "description": "NOT FOUND",
+                  "schema": {
+                     "$ref": "#/components/schemas/id"
+                  }
+               }
+            }
+         }
+      },
+      "/sda/update/{id}": {
+         "put": {
+            "tags": [
+               "Update a specific asset in the catalog"
+            ],
+            "parameters": [
+               {
+                  "name": "id",
+                  "in": "path",
+                  "description": "asset id to update",
+                  "required": true,
+                  "type": "string",
+                  "schema": {
+                     "$ref": "#/components/schemas/id"
+                  }
+               }
+            ],
+            "summary": "Update an asset",
+            "requestBody": {
+               "description": "Update an existing asset in the database",
+               "required": true,
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "$ref": "#/components/schemas/asset"
+                     },
+                     "example": {
+                        "data_type": "3",
+                        "data_uri": "data_uri_update"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "The asset was updated successfully",
+                  "required": true,
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/asset"
+                        },
+                        "example": {
+                           "_id": "63e1f215cacec931cd825e44",
+                           "data_type": "3",
+                           "data_uri": "data_uri_update",
+                           "metadata": {
+                              "name": "test",
+                              "date_created": "2023-02-06T02:39:15",
+                              "date_updated": "2023-02-06T02:39:15"
+                           },
+                           "scope": "com.ibm.aot.eng"
+                        }
+                     }
+                  }
+               },
+               "404": {
+                  "description": "The asset was not found",
+                  "schema": {
+                     "$ref": "#/components/schemas/asset"
+                  }
+               }
+            }
+         }
+      },
+      "/sda/delete/{id}": {
+         "delete": {
+            "tags": [
+               "Delete a specific asset from the catalog"
+            ],
+            "parameters": [
+               {
+                  "name": "id",
+                  "in": "path",
+                  "description": "asset id to delete",
+                  "required": true,
+                  "type": "string",
+                  "schema": {
+                     "$ref": "#/components/schemas/id"
+                  }
+               }
+            ],
+            "summary": "Delete an asset",
+            "responses": {
+               "202": {
+                  "description": "The asset was deleted successfully"
+               },
+               "404": {
+                  "description": "The asset was not found",
+                  "schema": {
+                     "$ref": "#/components/schemas/asset"
+                  }
+               }
+            }
+         }
+      }
+   }
+}
