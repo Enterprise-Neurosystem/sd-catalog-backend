@@ -1,40 +1,48 @@
 # sd-catalog-backend
-This code is being developed by the members of Central Intelligence Platfrom Working Group. For more details and to join the group please refer to: https://github.com/Enterprise-Neurosystem/central_intelligence_platform_meetings
+This repository contains a Python implementation of a catalog of self-describing assets. It is being developed by the members of the Central Intelligence Platform Working Group. To learn more about the group and join, please visit the following link:
+https://github.com/Enterprise-Neurosystem/central_intelligence_platform_meetings
 
-A python implementation of catalog of self-describing assets
+## Getting Started
+### Install MongoDB and Python
+ To use the system locally, you need to have [MongoDB](https://www.mongodb.com/try/download/community) installed and accessible. 
 
+  The URL of the MongoDB instance to use needs to be defined in the instance/config.py file.
 
-In order to use the system locally, you need to have mongo database accessible. 
-You can install the mongo db from https://www.mongodb.com/try/download/community
+  Make sure you have python >= 3.9 installed on your system.
 
-The URL of the mongodb to use needs to be defined in the instance/config.py file 
-
-To run the system after proper configuration, use the following shell commands from the directory containing catalog folder
+### Build using Poerty
+ You need to install [poetry](https://python-poetry.org/) to install dependencies and build the project.
 
 ```console
+poetry install
+```
+
+This will create a virtual environment for you and your code will run in the virtual environment
+
+### Run the project
+```console
 export FLASK_APP=catalog
-flask run
+poetry run flask run
 ```
 The above commands will work for zsh and Linux. If you are using another shell or windows, export the variable appropriately. 
 
-During development, use the following commands
+During development, if you want to debug set the debug flag.
+
 ```console
-export FLASK_APP=catalog
-export FLASK_ENV=development
-flask run
+export FLASK_DEBUG=1
 ```
-The difference between the two is that exceptions are exposed in detail in development mode
+The difference between the two is that exceptions are exposed in detail in development mode.
 
 Once the server is running, you can access the REST API for self-describing entries. 
-In the development mode, the default server is at  http://127.0.0.1:5000.
-The REST API is accessible via http://127.0.0.1:5000/sda prefix 
-The user management console is at http://127.0.0.1:5000/user/index 
+In development mode, the default server is at http://127.0.0.1:5000. The REST API is accessible via the prefix http://127.0.0.1:5000/sda. 
+The user management console is located at http://127.0.0.1:5000/user/index.
 
-<hr>
+## Running the Application with Docker
 
-The application can also be run using containers. You need to have the ability to build images locally and run them as containers. The current version has been tested using Docker desktop.
+The application can also be run using containers. You need to have the ability to build images locally and run them as containers. The current version has been tested using Docker Desktop.
 
-To bring up the application using docker compose
+To bring up the application using Docker Compose:
+
 ```console
 $ cd sd-catalog-backend
 
@@ -44,7 +52,10 @@ This will bring up two containers
 + sd-catalog-backend - containing the application logic and an embedded sqlite datastore for user management
 + mongodb - managing the self describing catalogue entries
 
-To test the application, use POSTMAN or any other client like httpie. With httpie
+The swagger documentation is avalable at http://127.0.0.1:5000/apispec/
+
+Below are the available APIs. 
+
 ```console
 $ http localhost:5000/user/list
 
