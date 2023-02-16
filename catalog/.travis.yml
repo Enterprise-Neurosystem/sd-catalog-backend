@@ -1,0 +1,28 @@
+dist: xenial
+language: python
+python: 3.9
+cache:
+  pip: true
+  directories:
+    - "$HOME/.cache/pypoetry"
+sudo: true
+install:
+  - pip install poetry
+  - poetry install --no-ansi
+stages:
+  - analyze
+  - release
+jobs:
+  include:
+    - name: "Analyze"
+      stage: analyze
+      script: |
+        poetry run pylint catalog
+        poetry run black catalog
+    - name: "Build Image"
+      stage: release
+      install: skip
+      script: |
+        docker build -t enterprise-neurosystem/sdcatalog .
+        docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        docker push enterprise-neurosystem/sdcatalog
