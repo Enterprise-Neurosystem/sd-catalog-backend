@@ -11,10 +11,15 @@ from flask import Blueprint, current_app, request, jsonify
 from dataclasses import dataclass, asdict
 import json
 
-from catalog.errors import MissingIdentity, MissingJSON, ItemNotFound, MissingInputException
+from catalog.errors import (
+    MissingIdentity,
+    MissingJSON,
+    ItemNotFound,
+    MissingInputException,
+)
 from catalog.sda_db import MongoDBase, SelfDescribingEntry, SelfDescribingEntryConverter
 
-sda_blueprint = Blueprint('sda_blueprint', __name__, url_prefix='/sda')
+sda_blueprint = Blueprint("sda_blueprint", __name__, url_prefix="/sda")
 DB_TAG = "DB_TAG"
 ID_TERM = "_id"
 QUERY_FIELD = "search"
@@ -25,7 +30,9 @@ def _initialize_sda_views(app):
     db_url = app.config["MONGO_URL"]
     db_name = app.config["SDA_DB_NAME"]
     db_coll = app.config["SDA_COLL_NAME"]
-    app.config[DB_TAG] = MongoDBase(SelfDescribingEntryConverter(), db_url, db_name, db_coll)
+    app.config[DB_TAG] = MongoDBase(
+        SelfDescribingEntryConverter(), db_url, db_name, db_coll
+    )
 
 
 def get_db():
@@ -34,7 +41,9 @@ def get_db():
         db_url = current_app.config["MONGO_URL"]
         db_name = current_app.config["SDA_DB_NAME"]
         db_coll = current_app.config["SDA_COLL_NAME"]
-        current_app.config[DB_TAG] = MongoDBase(SelfDescribingEntryConverter(), db_url, db_name, db_coll)
+        current_app.config[DB_TAG] = MongoDBase(
+            SelfDescribingEntryConverter(), db_url, db_name, db_coll
+        )
         answer = current_app.config[DB_TAG]
     return answer
 
@@ -84,7 +93,7 @@ def get_request_field(entry, field):
     return answer
 
 
-@sda_blueprint.route("/create", methods=['POST'])
+@sda_blueprint.route("/create", methods=["POST"])
 def create_request():
     db = get_db()
     entry = request.get_json()
@@ -96,7 +105,7 @@ def create_request():
     return jsonify(item)
 
 
-@sda_blueprint.route("/retrieve/<string:asset_id>", methods=['GET'])
+@sda_blueprint.route("/retrieve/<string:asset_id>", methods=["GET"])
 def retrieve_request(asset_id):
     db = get_db()
     result = db.retrieve(asset_id)
@@ -105,19 +114,19 @@ def retrieve_request(asset_id):
     return jsonify(result)
 
 
-@sda_blueprint.route("/delete/<string:asset_id>", methods=['DELETE'])
+@sda_blueprint.route("/delete/<string:asset_id>", methods=["DELETE"])
 def delete_request(asset_id):
     db = get_db()
     num_records_deleted = db.delete(asset_id)
     if num_records_deleted == 0:
         raise ItemNotFound(asset_id)
     else:
-        resp = jsonify('Asset deleted successfully!')
+        resp = jsonify("Asset deleted successfully!")
         resp.status_code = 200
         return resp
 
 
-@sda_blueprint.route("/update/<string:asset_id>", methods=['PUT'])
+@sda_blueprint.route("/update/<string:asset_id>", methods=["PUT"])
 def update_request(asset_id):
     db = get_db()
     # this_id = get_request_id("update")
@@ -134,14 +143,14 @@ def update_request(asset_id):
     return jsonify(item)
 
 
-@sda_blueprint.route("/list", methods=['GET'])
+@sda_blueprint.route("/list", methods=["GET"])
 def list_request():
     db = get_db()
     elements = db.get_all()
     return jsonify(elements)
 
 
-@sda_blueprint.route("/search", methods=['POST'])
+@sda_blueprint.route("/search", methods=["POST"])
 def search_request():
     db = get_db()
     query = get_request_field(QUERY_FIELD, get_request_json())
@@ -153,7 +162,7 @@ def search_request():
     return answer
 
 
-@sda_blueprint.route("/purge", methods=['POST'])
+@sda_blueprint.route("/purge", methods=["POST"])
 def purge_request():
     db = get_db()
     db.purge()

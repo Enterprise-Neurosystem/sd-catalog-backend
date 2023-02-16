@@ -9,6 +9,7 @@ Created on Thu Feb 10 14:50:34 2022
 
 from dataclasses import dataclass, asdict
 import json
+
 # import pymongo
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -72,13 +73,13 @@ class SelfDescribingEntry(GenericEntry):
 
     @classmethod
     def from_dict(cls, this_dict):
-        _id = this_dict.get('_id', None)
+        _id = this_dict.get("_id", None)
         if isinstance(_id, ObjectId):
             _id = str(_id)
-        data_uri = this_dict.get('data_uri', None)
-        scope = this_dict.get('scope', None)
-        subtype = this_dict.get('data_type', None)
-        metadata = this_dict.get('metadata', None)
+        data_uri = this_dict.get("data_uri", None)
+        scope = this_dict.get("scope", None)
+        subtype = this_dict.get("data_type", None)
+        metadata = this_dict.get("metadata", None)
         if data_uri is None:
             raise MissingArgumentException("data_uri", "SelfDescribingentry")
         if scope is None:
@@ -88,14 +89,14 @@ class SelfDescribingEntry(GenericEntry):
 
 
 class SelfDescribingEntryConverter(Converter):
-
     def dict2entry(self, this_dict: dict) -> GenericEntry:
         return SelfDescribingEntry.from_dict(this_dict)
 
 
 class MongoDBase:
-
-    def __init__(self, converter, db_url=None, db_name="sda_catalog", collection_name="sda_docs"):
+    def __init__(
+        self, converter, db_url=None, db_name="sda_catalog", collection_name="sda_docs"
+    ):
         self.db_url = db_url
         self.db_name = db_name
         self.collection_name = collection_name
@@ -138,14 +139,14 @@ class MongoDBase:
             docs = self.get_collection(client)
             id = self.make_identity(identity)
             update_key = {ID_FIELD: id}
-            update_value = {'$set': entry}
+            update_value = {"$set": entry}
             docs.update_one(update_key, update_value)
 
     def delete(self, identity):
         with self.get_client() as client:
             docs = self.get_collection(client)
             id = self.make_identity(identity)
-            num_records_deleted = docs.delete_one({'_id': id})
+            num_records_deleted = docs.delete_one({"_id": id})
             return num_records_deleted.deleted_count
 
     def purge(self):

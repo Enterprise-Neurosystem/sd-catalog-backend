@@ -9,7 +9,7 @@ from flask import Blueprint, jsonify, render_template
 import os
 import traceback
 
-errors = Blueprint('errors', __name__)
+errors = Blueprint("errors", __name__)
 
 
 class CatalogException(Exception):
@@ -30,7 +30,9 @@ class MissingIdentity(CatalogException):
 
 class InvalidArgumentException(CatalogException):
     def __init__(self, passed_value, field_name, entry_name):
-        super().__init__(f"The value {passed_value} is not allowed for {field_name} in {entry_name}")
+        super().__init__(
+            f"The value {passed_value} is not allowed for {field_name} in {entry_name}"
+        )
 
 
 class ItemNotFound(CatalogException):
@@ -45,7 +47,9 @@ class MissingJSON(CatalogException):
 
 class DuplicateEntryException(CatalogException):
     def __init__(self, entry_name, field_name, value_name):
-        super().__init__(f"An {entry_name} with {field_name} of {value_name} already exists")
+        super().__init__(
+            f"An {entry_name} with {field_name} of {value_name} already exists"
+        )
 
 
 class MissingInputException(CatalogException):
@@ -66,9 +70,9 @@ class WebException(Exception):
 
 
 def _initialize_errorhandlers(application):
-    '''
+    """
     Initialize error handlers
-    '''
+    """
     application.register_blueprint(errors)
     # g.error_message = " "
 
@@ -79,11 +83,8 @@ def handle_error(error):
     status_code = error.code
     success = False
     response = {
-        'success': success,
-        'error': {
-            'type': error.__class__.__name__,
-            'message': message
-        }
+        "success": success,
+        "error": {"type": error.__class__.__name__, "message": message},
     }
 
     return jsonify(response), status_code
@@ -93,6 +94,7 @@ def handle_error(error):
 # def message_processor():
 # return dict(message=g.error_message)
 
+
 @errors.app_errorhandler(WebException)
 def show_error_page(error):
     # g.error_message = get_display_error_message(error)
@@ -100,8 +102,8 @@ def show_error_page(error):
 
 
 def get_display_error_message(error):
-    orig = 'An unexpected error has occurred.'
-    debug_mode = os.getenv('FLASK_ENV')
+    orig = "An unexpected error has occurred."
+    debug_mode = os.getenv("FLASK_ENV")
 
     if isinstance(error, WebException):
         if error.underlying_excption is not None:
@@ -114,7 +116,7 @@ def get_display_error_message(error):
         messages = [orig]
         if not isinstance(error, (CatalogException, WebException)):
             messages = messages + [str(x) for x in error.args]
-        messages = messages + traceback.format_exc().split('\n')
+        messages = messages + traceback.format_exc().split("\n")
         return messages
     return [orig]
 
@@ -126,11 +128,8 @@ def handle_unexpected_error(error):
 
     success = False
     response = {
-        'success': success,
-        'error': {
-            'type': error.__class__.__name__,
-            'message': message
-        }
+        "success": success,
+        "error": {"type": error.__class__.__name__, "message": message},
     }
 
     return jsonify(response), status_code
