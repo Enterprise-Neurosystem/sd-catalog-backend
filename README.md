@@ -2,6 +2,9 @@
 This repository contains a Python implementation of a catalog of self-describing assets. It is being developed by the members of the Central Intelligence Platform Working Group. To learn more about the group and join, please visit the following link:
 https://github.com/Enterprise-Neurosystem/central_intelligence_platform_meetings
 
+You can check the use cases for self describing assets here.
+https://www.youtube.com/watch?v=vXksQxkhtAU
+
 ## Getting Started
 ### Install MongoDB and Python
  To use the system locally, you need to have [MongoDB](https://www.mongodb.com/try/download/community) installed and accessible. 
