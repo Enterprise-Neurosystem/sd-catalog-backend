@@ -21,7 +21,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     if test_config is None:
         # load the test configuration from instance path
-        app.config.from_pyfile('config.py', silent=True)
+        app.config.from_pyfile("config.py", silent=True)
     else:
         app.config.from_mapping(test_config)
 
@@ -35,17 +35,17 @@ def create_app(test_config=None):
     # app.register_blueprint(sda_blueprint)
 
     # Swagger config
-    SWAGGER_URL = '/apispec'
-    API_URL = '/static/apispec.json'
+    SWAGGER_URL = "/apispec"
+    API_URL = "/static/apispec.json"
     SWAGGER_BLUEPRINT = get_swaggerui_blueprint(
         SWAGGER_URL,
         API_URL,
         config={
-            'app_name': "SDA API",
-            'defaultModelsExpandDepth': -1,
-            'defaultModelRendering': "model",
-            'defaultModelExpandDepth': 2
-        }
+            "app_name": "SDA API",
+            "defaultModelsExpandDepth": -1,
+            "defaultModelRendering": "model",
+            "defaultModelExpandDepth": 2,
+        },
     )
     app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix=SWAGGER_URL)
 
@@ -54,15 +54,17 @@ def create_app(test_config=None):
     _initialize_user_views(app)
 
     # Test configuration
-    @app.route('/hello', methods=['GET', 'POST'])
+    @app.route("/hello", methods=["GET", "POST"])
     def hello():
         answer = "<p> " + app.instance_path + " <p>"
         for this_key in app.config.keys():
-            answer = answer + "<p> " + this_key + ":" + str(app.config[this_key]) + "</p>"
+            answer = (
+                answer + "<p> " + this_key + ":" + str(app.config[this_key]) + "</p>"
+            )
 
         return answer
 
-    @app.route('/shello', methods=['GET', 'POST'])
+    @app.route("/shello", methods=["GET", "POST"])
     def shello():
         answer = "<p> " + "Simple Hello " + "<p>"
         return answer
