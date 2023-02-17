@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "sd-catalog-backend"
+version = "0.1.0"
+description = "The self describing asset catalog for asset discovery and sharing."
+authors = ["Dinesh Verma <dverma@us.ibm.com>", "Anindita Das <anindita.das@ibm.com>", 
+"Josh Purcell<>", "Surajit Barman<>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^8.1.3"
+Flask = "^2.2.2"
+importlib-metadata = "^6.0.0"
+itsdangerous = "^2.1.2"
+Jinja2 = "^3.1.2"
+MarkupSafe = "^2.1.2"
+pymongo = "^4.3.3"
+python-dotenv = "^0.21.1"
+Werkzeug = "^2.2.3"
+zipp = "^3.13.0"
+flask-swagger-ui = "^4.11.1"
+pylint = "^2.16.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

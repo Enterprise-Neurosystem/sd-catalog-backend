@@ -9,6 +9,7 @@ Created on Thu Feb 10 14:50:34 2022
 from dataclasses import dataclass, asdict
 import json
 import os
+
 # import pymongo
 import sqlite3 as sql
 from catalog.errors import MissingArgumentException
@@ -40,11 +41,11 @@ class GericSQLEntry:
         return f"SELECT count(name) FROM sqlite_master WHERE type='table' AND name={table_name}"
 
     @classmethod
-    def entry_retrieve_command(cls, field='_id'):
+    def entry_retrieve_command(cls, field="_id"):
         return f"SELECT * FROM {cls.__name__} WHERE {field}=?"
 
     @classmethod
-    def entry_delete_command(cls, field='_id'):
+    def entry_delete_command(cls, field="_id"):
         return f"DELETE FROM {cls.__name__} WHERE {field}=?"
 
     @classmethod
@@ -69,15 +70,15 @@ class GericSQLEntry:
 
     @classmethod
     def create_table_suffix(cls):
-        raise NotImplementedError('')
+        raise NotImplementedError("")
 
     @classmethod
     def create_entry_suffix(cls):
-        raise NotImplementedError('')
+        raise NotImplementedError("")
 
     @classmethod
     def update_entry_suffix(cls):
-        raise NotImplementedError('')
+        raise NotImplementedError("")
 
 
 @dataclass
@@ -88,11 +89,11 @@ class UserEntry(GericSQLEntry):
 
     @classmethod
     def from_dict(cls, d):
-        for key in ['name', 'password', 'email']:
+        for key in ["name", "password", "email"]:
             value = d.get(key, None)
             if value is None:
                 raise MissingArgumentException(key, "UserEntry")
-        return UserEntry(d.get('_id', -1), d['name'], d['password'], d['email'])
+        return UserEntry(d.get("_id", -1), d["name"], d["password"], d["email"])
 
     @classmethod
     def create_table_suffix(cls):
@@ -110,7 +111,6 @@ class UserEntry(GericSQLEntry):
 
 
 class GenericSQLDBase:
-
     def __init__(self, sqdb_file, this_cls):
         self.sqdb_file = sqdb_file
         self.this_cls = this_cls

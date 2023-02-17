@@ -12,8 +12,8 @@ from catalog.sql_db import UserEntry, UserSQLDBase
 from catalog.errors import MissingArgumentException, DuplicateEntryException
 from catalog.errors import WebException, MissingIdentity, ItemNotFound
 
-auth_blueprint = Blueprint('auth_blueprint', __name__, url_prefix='/auth')
-user_blueprint = Blueprint('user_blueprint', __name__, url_prefix='/user')
+auth_blueprint = Blueprint("auth_blueprint", __name__, url_prefix="/auth")
+user_blueprint = Blueprint("user_blueprint", __name__, url_prefix="/user")
 
 ID_TERM = "_id"
 USER_DB = "SQL_DB"
@@ -41,7 +41,7 @@ def get_user_db():
 # All user management is done through the add, remove, list and update interfaces
 
 
-@user_blueprint.route("/add", methods=['POST'])
+@user_blueprint.route("/add", methods=["POST"])
 def add_user():
     if request.method == "POST":
         name = request.form["name"]
@@ -66,7 +66,7 @@ def add_user():
         return render_template("user/index.html")
 
 
-@user_blueprint.route("/remove", methods=['POST'])
+@user_blueprint.route("/remove", methods=["POST"])
 def retrieve_request():
     if request.method == "POST":
         name = request.form["name"]
@@ -86,28 +86,28 @@ def retrieve_request():
             flash(error)
 
 
-@user_blueprint.route("/list", methods=['GET', 'POST'])
+@user_blueprint.route("/list", methods=["GET", "POST"])
 def list_request():
     db = get_user_db()
     users = db.get_all()
     return render_template("user/list.html", users=users)
 
 
-@user_blueprint.route("/index", methods=['GET', 'POST'])
+@user_blueprint.route("/index", methods=["GET", "POST"])
 def index_request():
     return render_template("user/index.html")
 
 
-@user_blueprint.route("/add_page", methods=['GET', 'POST'])
+@user_blueprint.route("/add_page", methods=["GET", "POST"])
 def add_page_request():
     return render_template("user/add.html")
 
 
-@user_blueprint.route("/remove", methods=['GET'])
+@user_blueprint.route("/remove", methods=["GET"])
 def del_request():
     if request.method == "GET":
         print(request.args.keys())
-        identity = request.args.get('id')
+        identity = request.args.get("id")
         int_id = -1
         if identity is None:
             raise WebException(MissingIdentity("remove"))
@@ -123,6 +123,6 @@ def del_request():
         return render_template("user/list.html", users=db.get_all())
 
 
-@user_blueprint.route("/test", methods=['GET', 'POST'])
+@user_blueprint.route("/test", methods=["GET", "POST"])
 def test_request():
     return render_template("base.html")
