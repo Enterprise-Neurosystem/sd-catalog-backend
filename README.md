@@ -55,6 +55,170 @@ This will bring up two containers
 + sd-catalog-backend - containing the application logic and an embedded sqlite datastore for user management
 + mongodb - managing the self describing catalogue entries
 
-The swagger documentation is avalable at http://127.0.0.1:5000/apispec/
+To test the application, use POSTMAN, [SWAGGER](http://127.0.0.1:5000/apispec/#/), curl commands or any other client
+like httpie.
 
-Below are the available APIs. 
+Using curl commands
+
+* **Get all the Assets published in the catalog**
+
+```console
+$ curl -X 'GET' \
+  'http://127.0.0.1:5000/sda/list' \
+  -H 'accept: application/json'
+```
+
+_Response body_
+
+```console
+[
+  {
+    "_id": "63e549bb8bcb8d6c5b2b948b",
+    "data_type": "1",
+    "data_uri": "data_uri",
+    "metadata": {
+      "date_created": "2023-02-06T02:39:15",
+      "date_updated": "2023-02-06T02:39:15",
+      "name": "test"
+    },
+    "scope": "com.ibm.aot.eng"
+  },
+  {
+    "_id": "63e54a548fc3a976865add29",
+    "data_type": "1",
+    "data_uri": "data_uri",
+    "metadata": {
+      "date_created": "2023-02-06T02:39:15",
+      "date_updated": "2023-02-06T02:39:15",
+      "name": "test"
+    },
+    "scope": "com.ibm.aot.eng"
+  }
+]
+```
+
+* **Publish an asset to the catalog**
+
+```console
+$ curl -X 'POST' \
+  'http://127.0.0.1:5000/sda/create' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data_type": "1",
+  "data_uri": "data_uri",
+  "metadata": {
+    "name": "test",
+    "date_created": "2023-02-06T02:39:15",
+    "date_updated": "2023-02-06T02:39:15"
+  },
+  "scope": "com.ibm.aot.eng"
+}'
+```
+	
+_Response body_
+
+```console
+{
+  "_id": "63ed5b84ca55ee384494b3a7",
+  "data_type": "1",
+  "data_uri": "data_uri",
+  "metadata": {
+    "date_created": "2023-02-06T02:39:15",
+    "date_updated": "2023-02-06T02:39:15",
+    "name": "test"
+  },
+  "scope": "com.ibm.aot.eng"
+}
+```
+
+* **Retrieve a specific asset from the catalog**
+
+```console
+$ {
+  "_id": "63ed5b84ca55ee384494b3a7",
+  "data_type": "1",
+  "data_uri": "data_uri",
+  "metadata": {
+    "date_created": "2023-02-06T02:39:15",
+    "date_updated": "2023-02-06T02:39:15",
+    "name": "test"
+  },
+  "scope": "com.ibm.aot.eng"
+}
+```
+
+_Response body_
+
+```console
+{
+  "_id": "63ed5b84ca55ee384494b3a7",
+  "data_type": "1",
+  "data_uri": "data_uri",
+  "metadata": {
+    "date_created": "2023-02-06T02:39:15",
+    "date_updated": "2023-02-06T02:39:15",
+    "name": "test"
+  },
+  "scope": "com.ibm.aot.eng"
+}
+```
+
+* **Update a specific asset in the catalog**
+
+```console
+$ curl -X 'PUT' \
+  'http://127.0.0.1:5000/sda/update/63ed5b84ca55ee384494b3a7' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data_type": "3",
+  "data_uri": "data_uri_update"
+}'
+```
+
+_Response body_
+
+```console
+{
+  "_id": "63ed5b84ca55ee384494b3a7",
+  "data_type": "3",
+  "data_uri": "data_uri_update",
+  "metadata": {
+    "date_created": "2023-02-06T02:39:15",
+    "date_updated": "2023-02-06T02:39:15",
+    "name": "test"
+  },
+  "scope": "com.ibm.aot.eng"
+}
+```
+
+* **Delete a specific asset from the catalog**
+
+```console
+$ curl -X 'DELETE' \
+  'http://127.0.0.1:5000/sda/delete/63ed5b84ca55ee384494b3a7' \
+  -H 'accept: */*'
+```
+
+_Response body_
+
+```console
+"Asset deleted successfully!"
+```
+
+<hr>
+
+To update the application during development you need to use the following commands to bring the app down and remove the
+backend volume:
+```console
+$ docker-compose down
+Removing sd-catalog-backend ... done
+Removing mongodb            ... done
+Removing network sd-catalog-backend_backend
+Removing network sd-catalog-backend_frontend
+
+$ docker volume ls
+
+$ docker volume rm sd-catalog-backend_appdata
+```
